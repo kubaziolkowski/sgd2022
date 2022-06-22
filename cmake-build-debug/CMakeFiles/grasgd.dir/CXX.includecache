@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/kuba/CLionProjects/grasgd/main.cpp
+printf.h
+-
+SDL.h
+-
+SDL_ttf.h
+-
+SDL_image.h
+-
+SDL_mixer.h
+-
+
