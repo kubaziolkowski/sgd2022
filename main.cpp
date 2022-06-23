@@ -39,10 +39,10 @@ bool Texture::loadFromFile(std::string path)
 
 void Jetski::move(int border)
 {
-    if (velocity > 30) {
-        velocity = 30;
-    } else if (velocity < -30) {
-        velocity = -30;
+    if (velocity > 35) {
+        velocity = 35;
+    } else if (velocity < -35) {
+        velocity = -35;
     }
 
     if (up) velocity = velocity + acceleration * fdT;
@@ -247,6 +247,7 @@ bool init()
     return success;
 }
 
+int points = 0;
 
 int main(int argc, char* args[])
 {
@@ -270,9 +271,10 @@ int main(int argc, char* args[])
             upperBorder.x = 0,upperBorder.y = 0,upperBorder.w = 4096,upperBorder.h = 0;
             bottomBorder.x = 0,bottomBorder.y = 2048,bottomBorder.w = 4096,bottomBorder.h = 0;
 
-            SDL_Rect goldBox1;
+            SDL_Rect goldBox1,goldBox2,goldBox3;
             goldBox1.x = 646,goldBox1.y = 128,goldBox1.w = 67,goldBox1.h = 67;
-
+            goldBox2.x = 686,goldBox1.y = 625,goldBox1.w = 67,goldBox1.h = 67;
+            goldBox3.x = 706,goldBox1.y = 1167,goldBox1.w = 67,goldBox1.h = 67;
             //coordinates of other gold boxes: (681,631),(703,1187),(289,1167),(3705,1425),(3721,67)
             //coordinates of traps: (725,957),(1805,1253),(3701,849)
 
@@ -280,8 +282,7 @@ int main(int argc, char* args[])
             meta.x = 3360,meta.y = 100,meta.w = 140, meta.h = 85;
 
 
-            SDL_Rect goldBoxes[6] = { goldBox1};
-
+            SDL_Rect goldBoxes[3] = {goldBox1,goldBox2,goldBox3};
             while (!quit)
             {
                 while (SDL_PollEvent(&e) != 0)
@@ -317,11 +318,19 @@ int main(int argc, char* args[])
                     jetski.move(0);
                 }
 
-                int points = 0;
+//                cout<<jetski.jetskiX<<endl;
+//                cout<<jetski.jetskiY<<endl;
+                  cout<<"Delta time: "<<dT<<endl;
+                  cout<<"Final delta time: "<<fdT<<endl;
+
+
                 if (isColliding(jetski.shape,goldBoxes[points])) {
                     points++;
-                    cout<<points;
+                    cout<<points<<endl;
                 }
+
+
+
 
                 if (isColliding(jetski.shape,meta)) {
                     //close();
