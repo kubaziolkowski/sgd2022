@@ -39,53 +39,99 @@ bool Texture::loadFromFile(std::string path)
 
 void Jetski::move(int border)
 {
-    if (velocity > 35) {
-        velocity = 35;
-    } else if (velocity < -35) {
-        velocity = -35;
+    if (up) {
+        velocityY = velocityY - acceleration * fdT;
+        jetskiY += velocityY;
+
+        angle = 270;
+    } else if (down) {
+        velocityY = velocityY + acceleration * fdT;
+        jetskiY += velocityY;
+
+        angle = 90;
+    } else if (!up && !down) {
+        if (velocityY <= 0) {
+            velocityY = velocityY + acceleration * fdT;
+            jetskiY += velocityY;
+        } else {
+            velocityY = velocityY - acceleration * fdT;
+            jetskiY += velocityY;
+        }
     }
 
-    if (up) velocity = velocity + acceleration * fdT;
+    if (rightt) {
+        velocityX = velocityX + acceleration * fdT;
+        jetskiX += velocityX;
 
-    if (down) velocity = velocity - acceleration * fdT;
+        angle = 0;
+    } else if (leftt) {
+        velocityX = velocityX - acceleration * fdT;
+        jetskiX += velocityX;
 
-    if (!up && !down) {
-        if (velocity > 0) velocity = velocity - acceleration * fdT;
-        else if (velocity < 0) velocity = velocity + acceleration * fdT;
+        angle = 180;
+    } else if (!rightt && !leftt) {
+        if (velocityX >= 0) {
+            velocityX = velocityX - acceleration * fdT;
+            jetskiX += velocityX;
+        } else {
+            velocityX = velocityX + acceleration * fdT;
+            jetskiX += velocityX;
+        }
     }
 
-    if (rightt && velocity != 0) {
-        angle = angle + turnSpeed * velocity / maximumLinearVelocity;
+    if (up && rightt) {
+        angle = 315;
+    } else if (up && leftt) {
+        angle = 225;
     }
-    if (leftt && velocity != 0) {
-        angle = angle - turnSpeed * velocity / maximumLinearVelocity;
+
+    if (down && rightt) {
+        angle = 45;
+    } else if (down && leftt) {
+        angle = 135;
+    }
+
+    if (velocityX > 20) {
+        velocityX = 20;
+    } else if (velocityX < -20) {
+        velocityX = -20;
+    }
+
+    if (velocityY > 20) {
+        velocityY = 20;
+    } else if (velocityY < -20) {
+        velocityY = -20;
     }
 
     switch (border)
     {
-        case 0: {
-            jetskiX = jetskiX + cos(angle) * velocity;
-            jetskiY = jetskiY + sin(angle) * velocity;
-            break; //neutral
-        }
+        // case 0: {
+        //     jetskiX = jetskiX * velocityX;
+        //     jetskiY = jetskiY * velocityX;
+        //     break; //neutral
+        // }
         case 1: {
-            jetskiX = 1;
-            jetskiY = jetskiY + sin(angle) * velocity;
+            jetskiX += 50;
+            angle = 0;
+            velocityX = -velocityX;
             break; //left
         }
         case 2: {
-            jetskiX = 3900;
-            jetskiY = jetskiY + sin(angle) * velocity;
+            jetskiX -= 50;
+            angle = 180;
+            velocityX = -velocityX;
             break; //right
         }
         case 3: {
-            jetskiX = jetskiX + cos(angle) * velocity;
-            jetskiY = 1;
+            jetskiY += 50;
+            angle = 90;
+            velocityY = -velocityY;
             break; //up
         }
         case 4: {
-            jetskiX = jetskiX + cos(angle) * velocity;
-            jetskiY = 1948;
+            jetskiY -= 50;
+            angle = 270;
+            velocityY = -velocityY;
             break; //down
         }
 
@@ -100,8 +146,6 @@ void Jetski::move(int border)
     if (jetskiY > 380 ) {
         offsetY = jetskiY - 380;
     }
-
-
 }
 
 
@@ -168,7 +212,8 @@ Jetski::Jetski()
 
     shape.w = jetskiWidth,shape.h = jetskiHeight;
 
-    velocity = 0,turnSpeed = 0.09;
+    turnSpeed = 0.09;
+    //velocity = 0
 }
 
 void Jetski::handleEvent(SDL_Event& e)
@@ -344,7 +389,7 @@ int main(int argc, char* args[])
                 backgroundTexture.render(-offsetX, -offsetY);
                 jetskiTexture.render(jetski.jetskiX - offsetX,
                                      jetski.jetskiY - offsetY,
-                                     0, angle * 180 / M_PI);
+                                     0, angle);
 
                 SDL_RenderPresent(renderer);
             }

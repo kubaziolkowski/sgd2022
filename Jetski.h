@@ -13,8 +13,7 @@ public:
 // when the object moves along a straight path (it is a vector quantity)
     static const int maximumLinearVelocity = 45;
 
-    float jetskiX, jetskiY,velocity,acceleration = 0.005,deceleration = 0.05, turnSpeed;
-
+    float jetskiX, jetskiY, velocityX, velocityY, acceleration = 0.005, turnSpeed;
 
     Jetski();
 
